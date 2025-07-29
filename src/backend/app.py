@@ -29,9 +29,32 @@ logging.getLogger('azure.monitor.opentelemetry.exporter.export').setLevel(loggin
 # Choose pattern to use
 orchestrator = DebateOrchestrator()
 
-app = FastAPI()
+app = FastAPI(
+    title="Blog Post Generation API",
+    description="API for generating blog posts using AI debate orchestration",
+    version="1.0.0",
+    docs_url="/docs",  # Swagger UI endpoint
+    redoc_url="/redoc",  # ReDoc endpoint
+    openapi_url="/openapi.json"  # OpenAPI JSON schema endpoint
+)
 
 logger.info("Diagnostics: %s", os.getenv('SEMANTICKERNEL_EXPERIMENTAL_GENAI_ENABLE_OTEL_DIAGNOSTICS'))
+
+@app.get("/")
+async def root():
+    """
+    Root endpoint providing basic API information.
+    
+    Returns:
+        dict: Basic information about the API and available endpoints.
+    """
+    return {
+        "message": "Blog Post Generation API",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "redoc": "/redoc",
+        "openapi": "/openapi.json"
+    }
 
 @app.post("/blog")
 async def http_blog(request_body: dict = Body(...)):
